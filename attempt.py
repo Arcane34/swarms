@@ -24,24 +24,32 @@ GREEN = (0,255,0)
 
 
 class Explode:
-    def __init__(self, x, y, size, color, vel):
+    def __init__(self, x, y, size, color, vel, typ):
         self.x = x
         self.y = y
         self.color = color
         self.vel = vel
         self.size = size
         self.width = 8
+        self.typ = typ
 
     def update(self):
-        self.size += self.vel
+        if self.typ == "circle":
+            self.size += self.vel
+        elif self.typ == "rect":
+            self.size[0] += self.vel
+            self.size[1] += self.vel
         self.width -= 0.2
 
     def draw(self, screen):
         self.update()
         if int(self.width) < 1:
             explodes.remove(self)
-        else:
+        elif self.typ == "circle":
             pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.size, int(self.width))
+        elif self.typ == "rect":
+            pygame.draw.rect(screen, self.color, (int(self.x - self.size[0]/2), int(self.y - self.size[1]/2), int(self.size[0]), int(self.size[1])), int(self.width))
+            
         
 
 
@@ -68,6 +76,8 @@ class loopZone:
         if self.counter > 1 and self.x + self.space < programFlow.x < self.x + self.space + self.w//2:
             programFlow.x = self.x
             self.counter -= 1
+            if self.counter == 1:
+                explodes.append(Explode(self.x + self.space, self.y, [self.w,self.h], self.col1, 2, "rect"))
 
 
 class outputZone:
@@ -204,7 +214,7 @@ class ProgramFlow:
         if self.size < 1  or not(-10 < self.y < 610) :
             programFlowParticles.remove(self)
         elif not(-10 < self.x < 750):
-            explodes.append(Explode(self.x, self.y, self.size, self.color, 2))
+            explodes.append(Explode(self.x, self.y, self.size, self.color, 2, "circle"))
             programFlowParticles.remove(self)
 
     def update(self):
@@ -231,7 +241,7 @@ def redrawWin():
         if particle.size < 1 or not(-10 <particle.x < 810) or not(-10 <particle.y < 610):
             particles.remove(particle)
         elif (particle.lifeSpan != -1 and particle.lifeSpan < particle.age):
-            explodes.append(Explode(particle.x, particle.y, particle.size, particle.color, 2))
+            explodes.append(Explode(particle.x, particle.y, particle.size, particle.color, 2, "circle"))
             
 ##            for i in range(9):
 ##                particles.append(Particle(particle.x, particle.y, (random.randint(0,20)/10 -1)*3, (random.randint(0,20)/10 -1)*3 - 5,5, GREEN, -1))
@@ -264,7 +274,7 @@ outputs = []
 #particle = Particle(50, screen_height // 2, 1, 0, WHITE)
 #particles.append(particle)
 
-forLoop = loopZone(200,540,50,200,400,BLUE,YELLOW,5)
+forLoop = loopZone(200,540,50,200,400,BLUE,YELLOW,2)
 loops.append(forLoop)
 
 printX = outputZone(400,540,50,50,1)
