@@ -46,6 +46,54 @@ class Explode:
 
 
 
+
+class loopZone:
+    def __init__(self, x, y, w, h, spacing, col0, col1, counter):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.space = spacing
+        self.col0 = col0
+        self.col1 = col1
+        self.counter = counter
+
+    def draw(self, screen):
+        self.check()
+        pygame.draw.rect(screen, self.col0, (self.x - (self.w//2), self.y - (self.h//2), self.w, self.h))
+        if self.counter > 1:
+            pygame.draw.rect(screen, self.col1, (self.x + self.space - (self.w//2), self.y - (self.h//2), self.w, self.h))
+
+    def check(self):
+        if self.counter > 1 and self.x + self.space < programFlow.x < self.x + self.space + self.w//2:
+            programFlow.x = self.x
+            self.counter -= 1
+
+
+class outputZone:
+    def __init__(self, x, y, w, h, typeOfOut):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.typeOfOut = typeOfOut
+        self.printing = False
+
+    def check(self):
+        if self.x < programFlow.x < self.x + self.w//2 and not(self.printing):
+            particles.append(Particle(self.x, self.y, 0, -1,10, GREEN, 120))
+            self.printing = True
+
+        if self.printing and not(self.x < programFlow.x < self.x + self.w//2) :
+            self.printing = False
+
+
+
+
+
+
+
+
 # Define the Particle class
 class Particle:
     def __init__(self, x, y, vx, vy, size, color, lifeSpan):
@@ -57,7 +105,7 @@ class Particle:
         self.speed_y = vy
         
         self.age = 0
-        if lifeSpan == -1:
+        if lifeSpan < 0:
             self.sizeSpeed = 0.3
             self.ax = 0
             self.ay = 1
@@ -171,6 +219,13 @@ class ProgramFlow:
         particles.append(Particle(self.x, self.y, 0, -1,10, GREEN, 120))
 
 def redrawWin():
+    for area in loops:
+        area.draw(screen)
+
+    for area in outputs:
+        area.check()
+
+    
     for particle in particles:
         particle.draw(screen)
         if particle.size < 1 or not(-10 <particle.x < 810) or not(-10 <particle.y < 610):
@@ -203,10 +258,19 @@ particles = []
 programFlowParticles = []
 explodes = []
 
+loops = []
+outputs = []
+
 #particle = Particle(50, screen_height // 2, 1, 0, WHITE)
 #particles.append(particle)
 
-programFlow = ProgramFlow(50, screen_height // 2, 1, 0, WHITE)
+forLoop = loopZone(200,540,50,200,400,BLUE,YELLOW,5)
+loops.append(forLoop)
+
+printX = outputZone(400,540,50,50,1)
+outputs.append(printX)
+
+programFlow = ProgramFlow(50, screen_height // 2, 2, 0, WHITE)
 programFlowParticles.append(programFlow)
 
 
@@ -232,8 +296,5 @@ while True:
     # Get the elapsed time
     elapsed_time = pygame.time.get_ticks() - start_time
 
-    if programFlow.x == 400 and not(out):
-        programFlow.output(5)
-        out = True
 
     redrawWin()
