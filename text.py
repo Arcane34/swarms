@@ -14,6 +14,8 @@ pygame.display.set_caption("Typewriter Text Effect")
 # Define the colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 corbel = pygame.font.SysFont('Corbel', 35)
 calibri = pygame.font.SysFont('Calibri', 35)
@@ -24,14 +26,14 @@ courier = pygame.font.SysFont('Courier',35)
 font = courier
 
 # Define the text to be displayed
-text = "Hello, World! This is a typewriter text effect. And I am a super fricking genius. Also pretty sad bruh this might take a while."
+text = "Hello there, amigos! Welcome to an introduction to python with me, Arcane34 as your host!"
 
 # Define the starting position of the text
 
 
 
 # Define the typing speed
-typing_speed = 10
+typing_speed = 20
 
 # Define the function to display the text with a typewriter effect
 def typewriter(text):
@@ -45,7 +47,7 @@ def typewriter(text):
         words = line.split(" ")
         for i in range(len(words)):
             words.insert((i*2-1), ' ')
-        print(words)
+        
         for word in words:
             
             # Render the character as a surface
@@ -57,9 +59,9 @@ def typewriter(text):
             if x + word_width > (screen_width-50):
                 ##pygame.draw.circle(screen,(255,0,0),(x,y),5)
                 ##pygame.display.update()
-                print("LOOK")
+                
                 time.sleep(2)
-                print([formatted_text[:counter]], [formatted_text[counter:]], word)
+                
                 formatted_text = formatted_text[:counter]+ '\n' + formatted_text[counter:]
                 counter += 1
                 x = 50
@@ -81,13 +83,12 @@ def typewriter(text):
     for i in range(len(formatted_text)):
         if i != 0 and i + 2 < len(formatted_text) and (formatted_text[i] == '\n' and formatted_text[i+1] == ' ') :
             formatted_text = formatted_text[:i+1]+formatted_text[i+2:]
-            print(formatted_text)
+            
         elif i != 0 and i + 2 < len(formatted_text) and (formatted_text[i] == ' ' and formatted_text[i+1] == '\n'):
             formatted_text = formatted_text[:i]+formatted_text[i+1:]
-            print(formatted_text)
-
             
-    print([formatted_text])
+
+ 
     
     x, y = 50, 50
     # Split the text into lines
@@ -97,7 +98,7 @@ def typewriter(text):
         # Iterate over each character in the line
         for char in line:
             # Render the character as a surface
-            char_surface = font.render(char, True, WHITE)
+            char_surface = font.render(char, True, GREEN)
             # Get the size of the surface
             char_width, char_height = char_surface.get_size()
             # Blit the character surface onto the screen
