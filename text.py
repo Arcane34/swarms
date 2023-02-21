@@ -4,8 +4,8 @@ import time
 pygame.init()
 
 # Define the screen size
-screen_width = 800
-screen_height = 600
+screen_width = 560
+screen_height = 1080
 
 # Create the screen
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -38,7 +38,7 @@ typing_speed = 20
 # Define the function to display the text with a typewriter effect
 def typewriter(text):
     x, y = 50, 50
-    formatted_text = text
+    formatted_text = ""
     lines = text.split("\n")
     counter = 0
     # Iterate over each line
@@ -60,21 +60,25 @@ def typewriter(text):
                 ##pygame.draw.circle(screen,(255,0,0),(x,y),5)
                 ##pygame.display.update()
                 
-                time.sleep(2)
+                #time.sleep(2)
                 
-                formatted_text = formatted_text[:counter]+ '\n' + formatted_text[counter:]
-                counter += 1
+                formatted_text += '\n' + word
+                
+                
                 x = 50
                 y += word_height
-                
 
+            else:
+                formatted_text += word
+                
 ##            screen.blit(word_surface, (x, y))
 ##            # Update the screen
 ##            pygame.display.update()
 ##            # Wait for the typing speed
 ##            time.sleep(1 / typing_speed)
             x += word_width
-            counter += len(word)
+            
+            
             
         # Move the position to the next line
         x = 50
@@ -82,10 +86,13 @@ def typewriter(text):
 
     for i in range(len(formatted_text)):
         if i != 0 and i + 2 < len(formatted_text) and (formatted_text[i] == '\n' and formatted_text[i+1] == ' ') :
+            
             formatted_text = formatted_text[:i+1]+formatted_text[i+2:]
             
         elif i != 0 and i + 2 < len(formatted_text) and (formatted_text[i] == ' ' and formatted_text[i+1] == '\n'):
+            
             formatted_text = formatted_text[:i]+formatted_text[i+1:]
+            
             
 
  
@@ -112,7 +119,6 @@ def typewriter(text):
         # Move the position to the next line
         x = 50
         y += char_height
-    
     
 
 # Set the background color
